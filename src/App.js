@@ -16,8 +16,10 @@ function App() {
   
   useEffect(() => {
     Promise.all(sources.map(url => fetch(url))).then(async ([wo, ba]) => {
+      // const json = await Promise.all(urls.map(url => url.json()));
       const { data: { children: work } } = await wo.json();
       const { data: { children: battle } } = await ba.json();
+      // json.map(url =>)
       const imgs = [ ...work, ...battle ].sort((a, b) => b.data.ups - a.data.ups).map(i => i.data.url);
       setImages(imgs)
     });
@@ -25,9 +27,6 @@ function App() {
 
   return (
     <div className="container">
-      <header id="stations-header">
-        <h1>Stations (for KP)</h1>
-      </header>
       <div className="masonry-container">
         <Masonry brakePoints={brakePoints}>
           {images.map((image) => {
@@ -37,17 +36,21 @@ function App() {
           })}
         </Masonry>
       </div>
-      <footer id="stations-footer">
-        Wanna learn French or Spanish while you browse the web? Try Fluent: <a href="https://www.usefluent.co/">https://www.usefluent.co/</a>
-      </footer>
     </div>
   );
 }
 
+/* <footer id="stations-footer">
+  Wanna learn French or Spanish while you browse the web? Try Fluent: <a href="https://www.usefluent.co/">https://www.usefluent.co/</a>
+</footer> */
+
 const Tile = ({src}) => {
+  const [err, setErr] = useState(false);
+  if (err) { return null};
+
   return (
     <div className="tile">
-			<img src={src} onError='this.style.display = "none"' />
+			<img src={src} onError={() => setErr(true)} />
 		</div>
   );
 };
